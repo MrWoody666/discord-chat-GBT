@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@discordjs/core": "^0.6.0",
+    "axios": "^1.4.0",
+    "child_process": "^1.0.2",
+    "discord.js": "^14.11.0",
+    "dotenv": "^16.0.3",
+    "https": "^1.0.0",
+    "openai": "^3.2.1",
+    "path": "^0.12.7"
+  }
+}
