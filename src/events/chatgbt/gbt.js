@@ -4,6 +4,7 @@ const { generatePrompt } = require('./prompt.js');
 const color = require('../../utils/logger');
 
 const requestQueue = [];
+let isProcessing = false; // Флаг для отслеживания обработки запросов
 
 module.exports = {
   name: Events.MessageCreate,
@@ -28,7 +29,7 @@ module.exports = {
 
       requestQueue.push({ message, payload });
 
-      if (requestQueue.length === 1) {
+      if (!isProcessing) { // Если обработка запросов уже выполняется, то новый запрос добавляется в очередь
         processNextRequest();
       } else {
         const queuePosition = requestQueue.length;
@@ -43,8 +44,11 @@ module.exports = {
 
 async function processNextRequest() {
   if (requestQueue.length === 0) {
+    isProcessing = false; // Обработка очереди завершена
     return;
   }
+
+  isProcessing = true; // Устанавливаем флаг, что обработка запросов выполняется
 
   const { message, payload } = requestQueue[0];
 
@@ -61,6 +65,7 @@ async function processNextRequest() {
       const messages = content.match(/.{1,1999}/g);
       for (const messageContent of messages) {
         await message.channel.send(messageContent);
+        await delay(3000); // Задержка 3 секунды между отправкой сообщений
       }
     } else {
       await message.reply(content);
@@ -72,6 +77,12 @@ async function processNextRequest() {
   requestQueue.shift();
 
   if (requestQueue.length > 0) {
-    setTimeout(processNextRequest, 7000);
+    setTimeout(processNextRequest, 10000); // Задержка 10 секунд перед обработкой следующего запроса
+  } else {
+    isProcessing = false; // Обработка очереди завершена
   }
 }
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+} 
