@@ -3,22 +3,22 @@
     "@discordjs/core": "^0.6.0",
     "axios": "^1.4.0",
     "child_process": "^1.0.2",
+    "colors": "^1.4.0",
     "discord.js": "^14.11.0",
     "dotenv": "^16.0.3",
-    "https": "^1.0.0",
+    "fs": "^0.0.1-security",
     "nodemon": "^2.0.22",
     "openai": "^3.2.1",
     "path": "^0.12.7"
   },
-  "name": "discord-chat-gbt",
+  "name": "yanis-bot",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "s": "node index.js",
     "d": "nodemon index.js"
   },
-  "author": "",
+  "author": "Visp",
   "license": "ISC",
-  "description": ""
+  "description": "Приватный дискорд бот."
 }

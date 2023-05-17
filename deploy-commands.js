@@ -1,34 +1,42 @@
+require('dotenv').config();
 const { REST, Routes } = require('discord.js');
-const { clientId, token } = require('./config.json');
 const fs = require('fs');
+const color = require('./src/utils/logger');
 
 const commands = [];
 
-// Получаем все файлы команд из папки 'commands'
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-
-// Получаем данные каждой команды для развертывания
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  commands.push(command.data.toJSON());
+// Функция для получения списка файлов всех команд в указанной папке (включая подпапки)
+function getCommandFiles(dir) {
+  const files = fs.readdirSync(dir, { withFileTypes: true });
+  for (const file of files) {
+    if (file.isDirectory()) {
+      const subDir = `${dir}/${file.name}`;
+      getCommandFiles(subDir);
+    } else if (file.name.endsWith('.js')) {
+      commands.push(require(`${dir}/${file.name}`).data.toJSON());
+    }
+  }
 }
 
+// Получаем все файлы команд из папки 'commands' (включая подпапки)
+getCommandFiles('./src/commands');
+
 // Создаем экземпляр REST для взаимодействия с Discord API
-const rest = new REST({ version: '10' }).setToken(token);
+const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
 
 // Функция для развертывания команд
 async function deployCommands() {
   try {
-    console.log('Начинаю обновление глобальных команд приложения.');
+    color.info('Начинаю обновление глобальных команд приложения.');
 
     // Отправляем данные команд в API Discord для обновления глобальных команд
-    const data = await rest.put(Routes.applicationCommands(clientId), {
+    const data = await rest.put(Routes.applicationCommands(process.env.APPLICATION_ID), {
       body: commands
     });
 
-    console.log(`Успешно обновлено ${data.length} глобальных команд приложения.`);
+    color.success(`Успешно обновлено ${data.length} глобальных команд приложения.`);
   } catch (error) {
-    console.error(error);
+    color.error(error);
   }
 }
 

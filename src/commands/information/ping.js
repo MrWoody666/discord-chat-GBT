@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder} = require('discord.js');
 const axios = require('axios');
 
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
 
   async execute(interaction) {
     const startDiscordAPI = Date.now();
-    await axios.get('https://discord.com/api/v9/gateway');
+    await axios.get('https://discord.com/api/v10/gateway');
     const endDiscordAPI = Date.now();
     const latencyDiscordAPI = endDiscordAPI - startDiscordAPI;
 
@@ -20,8 +20,8 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setColor('#36393f')
       .setTitle('Задержка API')
-      .setDescription('С помощью этой команды вы можете проверить скорость обмена данными между ботом и серверами Discord и OpenAI.')
-      .setThumbnail('https://cdn.discordapp.com/attachments/1107383415826817165/1107392565185101844/ping.png')
+      .setDescription('С помощью этой команды вы можете проверить скорость обмена данными Discord и OpenAI.')
+      .setThumbnail('https://cdn.discordapp.com/attachments/1107383415826817165/1108160921186086973/ping.png')
       .addFields(
         { name: '> **Discord**', value: `\`\`\`yaml\n 		${latencyDiscordAPI}ms\`\`\``, inline: true },
         { name: '> **OpenAI**', value: `\`\`\`yaml\n 		${latencyOpenAIAPI}ms\`\`\``, inline: true },
